@@ -1,4 +1,4 @@
-package me.spb.hse.nikolyukin.cli.parser
+package me.spb.hse.nikolyukin.cli.parser.commands.words
 
 sealed class Word(val text: String)
 
