@@ -1,4 +1,4 @@
-package me.spb.hse.nikolyukin.cli.parser.commands.words
+package me.spb.hse.nikolyukin.cli.parser.words
 
 object CliRegex {
     // regex for quoted string was taken from https://www.metaltoad.com/blog/regex-quoted-string-escapable-quotes

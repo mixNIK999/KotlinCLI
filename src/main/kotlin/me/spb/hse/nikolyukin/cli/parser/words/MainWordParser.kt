@@ -1,4 +1,4 @@
-package me.spb.hse.nikolyukin.cli.parser.commands.words
+package me.spb.hse.nikolyukin.cli.parser.words
 
 class MainWordParser(
     val initParser : WordParser,

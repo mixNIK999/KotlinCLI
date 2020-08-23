@@ -1,4 +1,4 @@
-package me.spb.hse.nikolyukin.cli.parser.commands.words
+package me.spb.hse.nikolyukin.cli.parser.words
 
 import java.io.File
 import java.nio.file.Path

@@ -1,18 +1,21 @@
-package me.spb.hse.nikolyukin.cli.parser.commands.words
+package me.spb.hse.nikolyukin.cli.parser.words
 
-import com.github.h0tk3y.betterParse.combinators.*
+import com.github.h0tk3y.betterParse.combinators.or
+import com.github.h0tk3y.betterParse.combinators.use
+import com.github.h0tk3y.betterParse.combinators.zeroOrMore
 import com.github.h0tk3y.betterParse.grammar.Grammar
 import com.github.h0tk3y.betterParse.grammar.parseToEnd
 import com.github.h0tk3y.betterParse.lexer.literalToken
 import com.github.h0tk3y.betterParse.lexer.regexToken
 import com.github.h0tk3y.betterParse.parser.Parser
-import me.spb.hse.nikolyukin.cli.parser.commands.words.CliRegex.dollarExpressionRegex
-import me.spb.hse.nikolyukin.cli.parser.commands.words.CliRegex.homePathRegex
-import me.spb.hse.nikolyukin.cli.parser.commands.words.CliRegex.quoteRegex
-import me.spb.hse.nikolyukin.cli.parser.commands.words.CliRegex.spaceRegex
-import me.spb.hse.nikolyukin.cli.parser.commands.words.CliRegex.wordRegex
+import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.dollarExpressionRegex
+import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.homePathRegex
+import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.quoteRegex
+import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.spaceRegex
+import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.wordRegex
+import mu.KotlinLogging
 
-
+private val logger = KotlinLogging.logger {}
 class RawParser : Grammar<List<Word>>(), WordParser {
     // Tokens
     private val quote by regexToken(quoteRegex)
@@ -38,6 +41,7 @@ class RawParser : Grammar<List<Word>>(), WordParser {
     )
 
     override fun parse(rawString: String): Sequence<Word> {
+        logger.info("start parsing string: $rawString")
         return parseToEnd(rawString).asSequence()
     }
 }
