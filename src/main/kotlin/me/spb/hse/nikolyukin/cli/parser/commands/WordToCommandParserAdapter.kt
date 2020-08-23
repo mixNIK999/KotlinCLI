@@ -16,8 +16,7 @@ class WordToCommandParserAdapter(private val wordParser: WordParser) : CommandPa
                 when (word) {
                     is JustWord -> builder.addWord(word.text)
                     is Pipe -> builder.addPipe()
-                    is Spaces -> {
-                    }
+                    is Spaces -> Unit
                     else -> logger.error { "Ignore unexpected word type $word" }
                 }
             }
