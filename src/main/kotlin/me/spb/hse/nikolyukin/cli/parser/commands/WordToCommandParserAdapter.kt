@@ -1,21 +1,27 @@
 package me.spb.hse.nikolyukin.cli.parser.commands
 
+import me.spb.hse.nikolyukin.cli.parser.words.JustWord
+import me.spb.hse.nikolyukin.cli.parser.words.Pipe
+import me.spb.hse.nikolyukin.cli.parser.words.Spaces
 import me.spb.hse.nikolyukin.cli.parser.words.WordParser
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
-class WordToCommandParserAdapter(val wordParser: WordParser): CommandParser {
+
+class WordToCommandParserAdapter(private val wordParser: WordParser) : CommandParser {
     override fun parse(rawString: String): Pipeline {
-        TODO()
-//        wordParser.parse(rawString)
-//            .filter { word ->
-//                if (word is JustWord || word is Pipe) true
-//                else {
-//                    if (word !is Spaces) logger.error { "Unexpected word type $word" }
-//                    false
-//                }
-//            }
-//            .fol
+        val builder = PipelineBuilder()
+        wordParser.parse(rawString)
+            .forEach { word ->
+                when (word) {
+                    is JustWord -> builder.addWord(word.text)
+                    is Pipe -> builder.addPipe()
+                    is Spaces -> {
+                    }
+                    else -> logger.error { "Ignore unexpected word type $word" }
+                }
+            }
+        return builder.toPipeline()
     }
 
 }
