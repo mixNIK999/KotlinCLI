@@ -4,6 +4,15 @@ sealed class Word(val text: String) {
     override fun toString(): String {
         return "${this::class.simpleName}($text)"
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Word && Pair(other::class, other.text) == Pair(this::class, text)
+    }
+
+    override fun hashCode(): Int {
+        return Pair(this::class, text).hashCode()
+    }
+
 }
 
 class WeakQuotedText(text: String) : Word(text)
