@@ -1,6 +1,10 @@
 package me.spb.hse.nikolyukin.cli.parser.words
 
-sealed class Word(val text: String)
+sealed class Word(val text: String) {
+    override fun toString(): String {
+        return "${this::class.simpleName}($text)"
+    }
+}
 
 class WeakQuotedText(text: String) : Word(text)
 

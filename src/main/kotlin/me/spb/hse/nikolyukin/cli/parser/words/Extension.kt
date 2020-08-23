@@ -18,17 +18,15 @@ class DollarExtension(private val mapFun: (varName: String) -> String?) : Extens
     override fun extend(words: Sequence<Word>): Sequence<Word> =
         words.mapNotNull { word ->
             when (word) {
-                is DollarExpression -> getValue(word.text)?.let { JustWord(it) }
+                is DollarExpression -> mapFun(word.text)?.let { JustWord(it) }
                 is WeakQuotedText -> WeakQuotedText(
                     word.text.replace(CliRegex.dollarExpressionRegex.toRegex()) {
-                        getValue(it.value) ?: ""
+                        mapFun(it.value) ?: ""
                     }
                 )
                 else -> word
             }
         }
-
-    private fun getValue(dollarExtension: String): String? = mapFun(dollarExtension.drop(1))
 }
 
 class TildaExtension(private val homePath: Path) : Extension {
@@ -41,20 +39,46 @@ class TildaExtension(private val homePath: Path) : Extension {
         }
 }
 
-// converts sequence to format only with JustWord, Pipe and Spaces
+// converts sequence to format with only JustWord, Pipe and Spaces
 // example: "[JustWord, Spaces, JustWord, Pipe, JustWord]"
 class WordSplittingExtension : Extension {
     override fun extend(words: Sequence<Word>): Sequence<Word> {
-        val currentStringBuilder = StringBuilder()
-        return words.flatMap { word ->
-            when (word) {
-                is Pipe -> sequenceOf(word)
-                is Spaces -> sequenceOf(JustWord(currentStringBuilder.toString()), word)
-                else -> {
-                    currentStringBuilder.append(word)
-                    emptySequence()
+        val stringBuilder = StringBuilder()
+        return sequence {
+            yieldAll(words.flatMap { word ->
+                when (word) {
+                    is Pipe -> sequence<Word> {
+                        flushString(stringBuilder)
+                        yield(word)
+                    }
+                    is Spaces -> {
+                        sequence {
+                            flushString(stringBuilder)
+                            yield(word)
+                        }
+                    }
+                    is WeakQuotedText -> {
+                        stringBuilder.append(word.text.removeSurrounding("\""))
+                        emptySequence()
+                    }
+                    is FullQuotedText -> {
+                        stringBuilder.append(word.text.removeSurrounding("'"))
+                        emptySequence()
+                    }
+                    else -> {
+                        stringBuilder.append(word.text)
+                        emptySequence()
+                    }
                 }
-            }
+            })
+            flushString(stringBuilder)
+        }
+    }
+
+    companion object {
+        private suspend fun SequenceScope<Word>.flushString(buffer: StringBuilder) {
+            if (buffer.isNotEmpty()) this.yield(JustWord(buffer.toString()))
+            buffer.clear()
         }
     }
 }

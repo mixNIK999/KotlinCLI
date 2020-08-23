@@ -1,7 +1,6 @@
-package me.spb.hse.nikolyukin.cli.parser
+package me.spb.hse.nikolyukin.cli.parser.words
 
-import me.spb.hse.nikolyukin.cli.parser.words.RawParser
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -22,11 +21,13 @@ internal class RawParserTest {
                 Arguments.of("b a", listOf("b", " ", "a")),
                 Arguments.of(" a b ", listOf(" ", "a", " ", "b", " ")),
                 Arguments.of("foo bar|baz", listOf("foo", " ", "bar", "|", "baz")),
-//                Arguments.of("""a\"b""", listOf("""a\"b""")),
+                Arguments.of("""a\"b""", listOf("""a\"b""")),
                 Arguments.of(
                     """pre'first | \'second\' | third'post""",
                     listOf("pre", """'first | \'second\' | third'""", "post")
-                )
+                ),
+                Arguments.of("\$bc", listOf("bc")),
+                Arguments.of("a\$42\"b\"", listOf("a", "42", "\"b\""))
             )
     }
 }

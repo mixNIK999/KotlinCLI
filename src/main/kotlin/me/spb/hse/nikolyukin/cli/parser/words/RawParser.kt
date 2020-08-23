@@ -29,7 +29,7 @@ class RawParser : Grammar<List<Word>>(), WordParser {
     private val quoteParser by quote use {
         if (text.startsWith("'")) FullQuotedText(text) else WeakQuotedText(text)
     }
-    private val dollarExpressionParser by dollarExpression use { DollarExpression(text) }
+    private val dollarExpressionParser by dollarExpression use { DollarExpression(text.drop(1)) }
     private val homeParser by homePath use { HomePath(text) }
     private val pipeParser by pipe use { Pipe(text) }
     private val spacesParser by spaces use { Spaces(text) }
