@@ -1,8 +1,6 @@
 package me.spb.hse.nikolyukin.cli.parser.words
 
-import com.github.h0tk3y.betterParse.combinators.or
-import com.github.h0tk3y.betterParse.combinators.use
-import com.github.h0tk3y.betterParse.combinators.zeroOrMore
+import com.github.h0tk3y.betterParse.combinators.*
 import com.github.h0tk3y.betterParse.grammar.Grammar
 import com.github.h0tk3y.betterParse.grammar.parseToEnd
 import com.github.h0tk3y.betterParse.lexer.literalToken
@@ -20,6 +18,7 @@ class RawParser : Grammar<List<Word>>(), WordParser {
     // Tokens
     private val quote by regexToken(quoteRegex)
     private val pipe by literalToken("|")
+    private val equalitySign by literalToken("=")
     private val dollarExpression by regexToken(dollarExpressionRegex)
     private val homePath by regexToken(homePathRegex)
     private val spaces by regexToken(spaceRegex)
@@ -34,14 +33,24 @@ class RawParser : Grammar<List<Word>>(), WordParser {
     private val pipeParser by pipe use { Pipe(text) }
     private val spacesParser by spaces use { Spaces(text) }
     private val justWordParser by word use { JustWord(text) }
+    private val equalitySignParser by equalitySign use { EqualitySign(text) }
+
+    // sentences
+    // Note: replaces equality sign for invariant "commandName arg1 arg2 ...". For example a=b -> EqualitySign, Word(a), Word(b)
+    private val equality by justWordParser * equalitySignParser * justWordParser use { listOf(t2, t1, t3) }
+    private val equalitySentenceParser: Parser<List<Word>>
+            by equality * oneOrMore(justWordParser or dollarExpressionParser or quoteParser) use { t1 + t2 }
+
+    private val commandSentenceParser: Parser<List<Word>>
+            by oneOrMore(justWordParser or dollarExpressionParser or spacesParser or homeParser or quoteParser)
 
     // Main parser
-    override val rootParser: Parser<List<Word>> by zeroOrMore(
-        quoteParser or dollarExpressionParser or homeParser or pipeParser or spacesParser or justWordParser
-    )
+    override val rootParser: Parser<List<Word>> by separated(
+        (equalitySentenceParser or commandSentenceParser), -optional(spaces) * pipeParser * -optional(spaces)
+    ) use { reduce { a, pipe, b -> a + pipe + b } }
 
     override fun parse(rawString: String): Sequence<Word> {
-        logger.info("start parsing string: $rawString")
+        logger.info("start parsing string by grammar: $rawString")
         return parseToEnd(rawString).asSequence()
     }
 }

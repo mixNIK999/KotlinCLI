@@ -28,3 +28,5 @@ class Pipe(text: String) : Word(text)
 class JustWord(text: String) : Word(text)
 
 class Spaces(text: String) : Word(text)
+
+class EqualitySign(text: String) : Word(text)

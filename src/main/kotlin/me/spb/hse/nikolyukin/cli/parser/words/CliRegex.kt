@@ -5,7 +5,7 @@ object CliRegex {
     const val quoteRegex = """((?<![\\])['"])((?:.(?!(?<![\\])\1))*.?)\1"""
     const val spaceRegex = "\\s+"
 
-    const val wordRegex = """(\\"|\\'|\\$|\\~|[^\s'"$~|])+"""
+    const val wordRegex = """(\\=|\\"|\\'|\\$|\\~|[^\s'"$~=|])+"""
 
     // matches only if tilda is the beginning of a word
     const val homePathRegex = "(?<=[\\s])~/"

@@ -47,15 +47,9 @@ class WordSplittingExtension : Extension {
         return sequence {
             yieldAll(words.flatMap { word ->
                 when (word) {
-                    is Pipe -> sequence<Word> {
+                    is EqualitySign, is Pipe, is Spaces -> sequence<Word> {
                         flushString(stringBuilder)
                         yield(word)
-                    }
-                    is Spaces -> {
-                        sequence {
-                            flushString(stringBuilder)
-                            yield(word)
-                        }
                     }
                     is WeakQuotedText -> {
                         stringBuilder.append(word.text.removeSurrounding("\""))
