@@ -1,6 +1,7 @@
 package me.spb.hse.nikolyukin.cli.shell.executable
 
 import me.spb.hse.nikolyukin.cli.shell.Environment
+import me.spb.hse.nikolyukin.cli.shell.Environment.Companion.WORKING_DIR
 import me.spb.hse.nikolyukin.cli.shell.EnvironmentByMapImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.io.TempDir
@@ -16,7 +17,7 @@ open class ExecutionCommandTest {
     @BeforeEach
     fun init() {
         homePathString = homePath.toAbsolutePath().toString()
-        env = EnvironmentByMapImpl(mutableMapOf())
+        env = EnvironmentByMapImpl(mutableMapOf(WORKING_DIR to homePathString))
         env[homeVar] = homePathString
     }
 }
