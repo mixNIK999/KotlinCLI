@@ -1,14 +1,14 @@
 package me.spb.hse.nikolyukin.cli.shell.executable
 
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
+import java.io.InputStream
+
 
 interface ExecutionCommand {
     // returns stdout and stderr
-    suspend fun execute(stdin: ReceiveChannel<String>): OutChannels
+    fun execute(stdin: InputStream): OutChannels
 }
 
-data class OutChannels(val stdout: ReceiveChannel<String>, val stderr: ReceiveChannel<String>) {
-    constructor() : this(Channel<String>(0).apply { close() }, Channel<String>(0).apply { close() })
+data class OutChannels(val stdout: InputStream, val stderr: InputStream) {
+    constructor() : this("".byteInputStream(), "".byteInputStream())
 }
 

@@ -1,34 +1,25 @@
 package me.spb.hse.nikolyukin.cli.shell.executable
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.withContext
+import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 
 class ExecutionCat(private val currentPath: Path, private val files: List<Path>) : ExecutionCommand {
-    override suspend fun execute(stdin: ReceiveChannel<String>): OutChannels {
-        val stdout = Channel<String>()
-        val stderr = Channel<String>()
+    override fun execute(stdin: InputStream): OutChannels {
+        val stdoutBuff = mutableListOf<Byte>()
+        val stderrBuilder = StringBuilder()
         if (files.isEmpty()) {
-            for (str in stdin) {
-                stdout.send(str)
-            }
+            stdoutBuff += stdin.readAllBytes().toList()
         } else {
             for (file in files) {
                 val pathToFile = currentPath.resolve(file)
                 if (!Files.exists(pathToFile)) {
-                    stderr.send("File $pathToFile does not exists")
+                    stderrBuilder.append("Error: file $pathToFile does not exist\n")
                     continue
                 }
-                withContext(Dispatchers.IO) {
-                    // if I got it right Dispatcher.IO is right way to call blocking method
-                    @Suppress("BlockingMethodInNonBlockingContext")
-                    stdout.send(Files.readString(pathToFile))
-                }
+                stdoutBuff += Files.readAllBytes(pathToFile).toList()
             }
         }
-        return OutChannels(stdout, stderr)
+        return OutChannels(stdoutBuff.toByteArray().inputStream(), stderrBuilder.toString().byteInputStream())
     }
 }
