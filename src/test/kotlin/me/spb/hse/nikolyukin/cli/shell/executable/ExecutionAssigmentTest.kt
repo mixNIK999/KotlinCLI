@@ -1,5 +1,6 @@
 package me.spb.hse.nikolyukin.cli.shell.executable
 
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -13,10 +14,12 @@ internal class ExecutionAssigmentTest : ExecutionCommandTest() {
 
         assertNull(env[varName])
         val exe = ExecutionAssigment(env, varName, value)
-        exe.execute(emptyChannel)
+        runBlocking {
+            exe.execute(emptyChannel)
+        }
         assertEquals(value, env[varName])
 
-        assertEquals(homePath, env[homeVar])
+        assertEquals(homePathString, env[homeVar])
     }
 
     @Test
@@ -29,10 +32,12 @@ internal class ExecutionAssigmentTest : ExecutionCommandTest() {
 
         val newValue = "c"
         val exe = ExecutionAssigment(env, varName, newValue)
-        exe.execute(emptyChannel)
+        runBlocking {
+            exe.execute(emptyChannel)
+        }
         assertEquals(newValue, env[varName])
 
-        assertEquals(homePath, env[homeVar])
+        assertEquals(homePathString, env[homeVar])
     }
 
 }

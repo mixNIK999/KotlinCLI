@@ -4,16 +4,22 @@ import kotlinx.coroutines.channels.Channel
 import me.spb.hse.nikolyukin.cli.shell.Environment
 import me.spb.hse.nikolyukin.cli.shell.EnvironmentByMapImpl
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.io.TempDir
+import java.nio.file.Path
 
 open class ExecutionCommandTest {
     protected lateinit var env: Environment
     protected val emptyChannel = Channel<String>(0).apply { close() }
+
+    @TempDir
+    protected lateinit var homePath: Path
     protected val homeVar = "HOME"
-    protected val homePath = "/home/mishock"
+    protected lateinit var homePathString: String
 
     @BeforeEach
     fun init() {
+        homePathString = homePath.toAbsolutePath().toString()
         env = EnvironmentByMapImpl(mutableMapOf())
-        env[homeVar] = homePath
+        env[homeVar] = homePathString
     }
 }

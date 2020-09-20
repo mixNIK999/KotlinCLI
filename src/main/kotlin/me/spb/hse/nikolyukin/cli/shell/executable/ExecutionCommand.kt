@@ -5,7 +5,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 
 interface ExecutionCommand {
     // returns stdout and stderr
-    fun execute(stdin: ReceiveChannel<String>): OutChannels
+    suspend fun execute(stdin: ReceiveChannel<String>): OutChannels
 }
 
 data class OutChannels(val stdout: ReceiveChannel<String>, val stderr: ReceiveChannel<String>) {
