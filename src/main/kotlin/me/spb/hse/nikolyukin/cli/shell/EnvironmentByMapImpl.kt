@@ -8,4 +8,6 @@ class EnvironmentByMapImpl(private val map: MutableMap<String, String>) : Enviro
     override fun set(name: String, value: String) {
         map[name] = value
     }
+
+    override fun toMap(): Map<String, String> = map
 }

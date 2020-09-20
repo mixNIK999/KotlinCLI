@@ -1,9 +1,12 @@
 package me.spb.hse.nikolyukin.cli.shell.executable
 
+import me.spb.hse.nikolyukin.cli.shell.Environment
 import java.io.InputStream
+import java.nio.file.Files
 import java.nio.file.Path
 
 class ExecutionExternalCommand(
+    private val environment: Environment,
     private val workingDir: Path,
     private val name: String,
     private val args: List<String>
@@ -11,14 +14,19 @@ class ExecutionExternalCommand(
 
     override fun execute(stdin: InputStream): OutChannels {
         val cmdPath = workingDir.resolve(name)
-        val process = ProcessBuilder(listOf(cmdPath.toString()))
-            .directory(workingDir.toFile())
-            .start()
+        val cmd = if (Files.exists(cmdPath)) cmdPath.toString() else name
 
-        val inStream = process.outputStream.bufferedWriter()
-        val outStream = process.inputStream.bufferedReader()
-        val errStream = process.errorStream.bufferedReader()
+        val pBuilder = ProcessBuilder(listOf(cmd) + args).directory(workingDir.toFile())
+        val extEnv = pBuilder.environment()
+        extEnv.putAll(environment.toMap())
+        val process = pBuilder.start()
 
-        return OutChannels()
+        val inStream = process.outputStream
+        val outStream = process.inputStream
+        val errStream = process.errorStream
+
+        stdin.copyTo(inStream)
+
+        return OutChannels(outStream, errStream)
     }
 }
