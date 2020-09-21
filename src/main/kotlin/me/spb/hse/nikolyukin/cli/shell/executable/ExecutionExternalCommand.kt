@@ -3,16 +3,15 @@ package me.spb.hse.nikolyukin.cli.shell.executable
 import me.spb.hse.nikolyukin.cli.shell.Environment
 import java.io.InputStream
 import java.nio.file.Files
-import java.nio.file.Path
 
 class ExecutionExternalCommand(
     private val environment: Environment,
-    private val workingDir: Path,
     private val name: String,
     private val args: List<String>
 ) : ExecutionCommand {
 
     override fun execute(stdin: InputStream): OutChannels {
+        val workingDir = environment.getWorkingDirectory()
         val cmdPath = workingDir.resolve(name)
         val cmd = if (Files.exists(cmdPath)) cmdPath.toString() else name
 
