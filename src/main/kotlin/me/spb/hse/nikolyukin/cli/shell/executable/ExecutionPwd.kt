@@ -5,6 +5,6 @@ import java.io.InputStream
 
 class ExecutionPwd(private val environment: Environment) : ExecutionCommand {
     override fun execute(stdin: InputStream): OutChannels {
-        return OutChannels(environment.getWorkingDirectory().toString().byteInputStream(), "".byteInputStream())
+        return OutChannels(environment.workingDir.toString().byteInputStream(), "".byteInputStream())
     }
 }

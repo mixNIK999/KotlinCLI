@@ -17,8 +17,8 @@ open class ExecutionCommandTest {
     @BeforeEach
     fun init() {
         env = EnvironmentByMapImpl(mutableMapOf())
-        env.setStatus(ShellStatus.RUNNING)
-        env.setWorkingDirectory(homePath)
+        env.status = ShellStatus.RUNNING
+        env.workingDir = homePath
 
         homePathString = homePath.toAbsolutePath().toString()
         env[homeVar] = homePathString

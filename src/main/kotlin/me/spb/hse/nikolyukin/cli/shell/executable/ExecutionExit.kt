@@ -6,7 +6,7 @@ import java.io.InputStream
 
 class ExecutionExit(private val environment: Environment) : ExecutionCommand {
     override fun execute(stdin: InputStream): OutChannels {
-        environment.setStatus(ShellStatus.STOPPING)
+        environment.status = ShellStatus.STOPPING
         return OutChannels()
     }
 }

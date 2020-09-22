@@ -6,11 +6,8 @@ interface Environment {
     operator fun get(name: String): String?
     operator fun set(name: String, value: String)
 
-    fun setWorkingDirectory(dir: Path)
-    fun getWorkingDirectory(): Path
-
-    fun getStatus(): ShellStatus
-    fun setStatus(status: ShellStatus)
+    var status: ShellStatus
+    var workingDir: Path
 
     fun toMap(): Map<String, String>
 

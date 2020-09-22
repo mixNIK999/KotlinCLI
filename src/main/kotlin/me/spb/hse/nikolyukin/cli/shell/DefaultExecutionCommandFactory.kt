@@ -14,7 +14,7 @@ class DefaultExecutionCommandFactory(private val environment: Environment) : Exe
                 }
                 ExecutionAssigment(environment, command.args[0].value, command.args[1].value)
             }
-            "cat" -> ExecutionCat(environment.getWorkingDirectory(), command.args.map { Path.of(it.value) })
+            "cat" -> ExecutionCat(environment.workingDir, command.args.map { Path.of(it.value) })
             "echo" -> ExecutionEcho(command.args.map { it.value })
             "exit" -> ExecutionExit(environment)
             "pwd" -> ExecutionPwd(environment)
@@ -22,7 +22,7 @@ class DefaultExecutionCommandFactory(private val environment: Environment) : Exe
                 if (command.args.isEmpty()) {
                     throw ShellException("wc takes 1 argument, but was found 0")
                 }
-                ExecutionWc(environment.getWorkingDirectory(), Path.of(command.args[0].value))
+                ExecutionWc(environment.workingDir, Path.of(command.args[0].value))
             }
             else -> {
                 ExecutionExternalCommand(environment, command.name.text, command.args.map { it.value })

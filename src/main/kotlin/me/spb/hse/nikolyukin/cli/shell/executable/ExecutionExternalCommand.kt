@@ -11,7 +11,7 @@ class ExecutionExternalCommand(
 ) : ExecutionCommand {
 
     override fun execute(stdin: InputStream): OutChannels {
-        val workingDir = environment.getWorkingDirectory()
+        val workingDir = environment.workingDir
         val cmdPath = workingDir.resolve(name)
         val cmd = if (Files.exists(cmdPath)) cmdPath.toString() else name
 

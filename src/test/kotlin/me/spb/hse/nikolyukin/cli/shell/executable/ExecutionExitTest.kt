@@ -8,6 +8,6 @@ internal class ExecutionExitTest : ExecutionCommandTest() {
     @Test
     fun execute() {
         ExecutionExit(env).execute("".byteInputStream())
-        assertEquals(ShellStatus.STOPPING, env.getStatus())
+        assertEquals(ShellStatus.STOPPING, env.status)
     }
 }

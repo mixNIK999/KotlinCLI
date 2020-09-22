@@ -16,7 +16,7 @@ internal class ExecutionExternalCommandTest : ExecutionCommandTest() {
         Files.writeString(file, text)
 
         val command = if (System.getProperty("os.name").startsWith("windows", ignoreCase = true)) "type" else "cat"
-        val cmd = ExecutionExternalCommand(env, homePath, command, listOf(fileName))
+        val cmd = ExecutionExternalCommand(env, command, listOf(fileName))
 
         val out = cmd.execute("".byteInputStream()).stdout.reader().readText()
 
