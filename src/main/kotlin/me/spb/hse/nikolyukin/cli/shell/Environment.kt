@@ -8,11 +8,13 @@ interface Environment {
 
     var status: ShellStatus
     var workingDir: Path
+    val homePath: Path
 
     fun toMap(): Map<String, String>
 
     companion object {
         //absolute path to working directory
+        const val HOME = "_HOME"
         const val WORKING_DIR = "_WORKING_DIR"
         const val SHELL_STATUS = "_IS_SHELL_RUNNING"
     }

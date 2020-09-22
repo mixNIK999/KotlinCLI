@@ -1,9 +1,6 @@
 package me.spb.hse.nikolyukin.cli.parser.commands
 
-import me.spb.hse.nikolyukin.cli.parser.words.JustWord
-import me.spb.hse.nikolyukin.cli.parser.words.Pipe
-import me.spb.hse.nikolyukin.cli.parser.words.Spaces
-import me.spb.hse.nikolyukin.cli.parser.words.WordParser
+import me.spb.hse.nikolyukin.cli.parser.words.*
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
@@ -14,7 +11,7 @@ class WordToCommandParserAdapter(private val wordParser: WordParser) : CommandPa
         wordParser.parse(rawString)
             .forEach { word ->
                 when (word) {
-                    is JustWord -> builder.addWord(word.text)
+                    is JustWord, is EqualitySign -> builder.addWord(word.text)
                     is Pipe -> builder.addPipe()
                     is Spaces -> Unit
                     else -> logger.error { "Ignore unexpected word type $word" }

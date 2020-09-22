@@ -32,7 +32,7 @@ internal class DefaultShellTest {
     @Test
     fun runAndExit() {
         every { parser.parse(any()) } returns Pipeline(listOf(Command(Name("exit"), emptyList())))
-        every { commandFactory.createExecutionCommand(any()) } returns ExecutionExit(environment)
+        every { commandFactory.createExecutionCommand(any(), any()) } returns ExecutionExit(environment)
 
         val shell = DefaultShell(environment, parser, commandFactory)
 
@@ -40,7 +40,7 @@ internal class DefaultShellTest {
         shell.run()
 
         verify(exactly = 1) { parser.parse(any()) }
-        verify(exactly = 1) { commandFactory.createExecutionCommand(any()) }
+        verify(exactly = 1) { commandFactory.createExecutionCommand(any(), any()) }
 
         confirmVerified(parser, commandFactory)
     }
@@ -52,8 +52,8 @@ internal class DefaultShellTest {
 
         every { parser.parse("string1") } returns Pipeline(listOf(emptyCmd))
         every { parser.parse("string2") } returns Pipeline(listOf(exitCmd))
-        every { commandFactory.createExecutionCommand(emptyCmd) } returns ExecutionLambda { "" }
-        every { commandFactory.createExecutionCommand(exitCmd) } returns ExecutionExit(environment)
+        every { commandFactory.createExecutionCommand(any(), emptyCmd) } returns ExecutionLambda { "" }
+        every { commandFactory.createExecutionCommand(any(), exitCmd) } returns ExecutionExit(environment)
 
         val shell = DefaultShell(environment, parser, commandFactory)
 
@@ -61,7 +61,7 @@ internal class DefaultShellTest {
         shell.run()
 
         verify(exactly = 2) { parser.parse(any()) }
-        verify(exactly = 2) { commandFactory.createExecutionCommand(any()) }
+        verify(exactly = 2) { commandFactory.createExecutionCommand(any(), any()) }
 
         confirmVerified(parser, commandFactory)
     }
@@ -76,8 +76,8 @@ internal class DefaultShellTest {
 
         val cmdList = listOf(echoCmd, assertCmd, assertCmd, assertCmd, exitCmd)
         every { parser.parse(any()) } returns Pipeline(cmdList)
-        every { commandFactory.createExecutionCommand(echoCmd) } returns ExecutionLambda { text }
-        every { commandFactory.createExecutionCommand(assertCmd) } returns ExecutionLambda {
+        every { commandFactory.createExecutionCommand(any(), echoCmd) } returns ExecutionLambda { text }
+        every { commandFactory.createExecutionCommand(any(), assertCmd) } returns ExecutionLambda {
             it.also {
                 assertEquals(
                     text,
@@ -85,7 +85,7 @@ internal class DefaultShellTest {
                 )
             }
         }
-        every { commandFactory.createExecutionCommand(exitCmd) } returns ExecutionExit(environment)
+        every { commandFactory.createExecutionCommand(any(), exitCmd) } returns ExecutionExit(environment)
 
         val shell = DefaultShell(environment, parser, commandFactory)
 
@@ -93,7 +93,7 @@ internal class DefaultShellTest {
         shell.run()
 
         verify(exactly = 1) { parser.parse(any()) }
-        verify(exactly = cmdList.size) { commandFactory.createExecutionCommand(any()) }
+        verify(exactly = cmdList.size) { commandFactory.createExecutionCommand(any(), any()) }
 
         confirmVerified(parser, commandFactory)
     }

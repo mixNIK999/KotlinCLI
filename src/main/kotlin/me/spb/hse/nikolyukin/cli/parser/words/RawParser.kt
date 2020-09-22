@@ -36,18 +36,30 @@ class RawParser : Grammar<List<Word>>(), WordParser {
     private val equalitySignParser by equalitySign use { EqualitySign(text) }
 
     // sentences
-    // Note: replaces equality sign for invariant "commandName arg1 arg2 ...". For example a=b -> EqualitySign, Word(a), Word(b)
-    private val equality by justWordParser * equalitySignParser * justWordParser use { listOf(t2, t1, t3) }
+    // Note: replaces equality sign for invariant "commandName arg1 arg2 ...". For example a=b -> EqualitySign, Spaces, Word(a), Spaces, Word(b)
+    private val equality by justWordParser * equalitySignParser * justWordParser use {
+        listOf(
+            t2,
+            Spaces(" "),
+            t1,
+            Spaces(" "),
+            t3
+        )
+    }
     private val equalitySentenceParser: Parser<List<Word>>
-            by equality * oneOrMore(justWordParser or dollarExpressionParser or quoteParser) use { t1 + t2 }
+            by equality * zeroOrMore(justWordParser or dollarExpressionParser or quoteParser) use { t1 + t2 }
 
     private val commandSentenceParser: Parser<List<Word>>
             by oneOrMore(justWordParser or dollarExpressionParser or spacesParser or homeParser or quoteParser)
 
     // Main parser
-    override val rootParser: Parser<List<Word>> by separated(
-        (equalitySentenceParser or commandSentenceParser), -optional(spaces) * pipeParser * -optional(spaces)
-    ) use { reduce { a, pipe, b -> a + pipe + b } }
+    override val rootParser: Parser<List<Word>> by (
+            separated(
+                (equalitySentenceParser or commandSentenceParser),
+                -optional(spaces) * pipeParser * -optional(spaces)
+            ) use { reduce { a, pipe, b -> a + pipe + b } }) or
+            // or blank string
+            zeroOrMore(spaces use { Spaces(text) })
 
     override fun parse(rawString: String): Sequence<Word> {
         logger.info("start parsing string by grammar: $rawString")

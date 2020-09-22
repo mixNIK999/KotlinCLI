@@ -13,14 +13,20 @@ class DefaultShell(
             val line = readLine() ?: break
             try {
                 val pipeline = parser.parse(line)
-                pipeline.commands.fold("".byteInputStream()) { stdin: InputStream, command ->
-                    val exe = commandFactory.createExecutionCommand(command)
+                val pipelineOut = pipeline.commands.fold("".byteInputStream()) { stdin: InputStream, command ->
+                    val exe = commandFactory.createExecutionCommand(environment, command)
                     val out = exe.execute(stdin)
-                    println(out.stderr.bufferedReader().readText())
+                    val errMsg = out.stderr.bufferedReader().readText()
+                    if (errMsg.isNotEmpty()) {
+                        println(errMsg)
+                    }
                     out.stdout
                 }
+                val outText = pipelineOut.bufferedReader().readText()
+                if (outText.isNotEmpty())
+                    println(outText)
             } catch (ex: Exception) {
-                println(ex.message)
+                println("Error: ${ex.message}")
             }
         }
     }

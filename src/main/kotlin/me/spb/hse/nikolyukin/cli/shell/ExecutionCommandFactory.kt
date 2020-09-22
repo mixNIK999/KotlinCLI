@@ -4,5 +4,5 @@ import me.spb.hse.nikolyukin.cli.parser.commands.Command
 import me.spb.hse.nikolyukin.cli.shell.executable.ExecutionCommand
 
 interface ExecutionCommandFactory {
-    fun createExecutionCommand(command: Command): ExecutionCommand
+    fun createExecutionCommand(environment: Environment, command: Command): ExecutionCommand
 }

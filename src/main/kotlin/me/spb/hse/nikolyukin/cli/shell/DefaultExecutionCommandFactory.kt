@@ -5,8 +5,8 @@ import me.spb.hse.nikolyukin.cli.shell.executable.*
 import java.nio.file.Path
 
 
-class DefaultExecutionCommandFactory(private val environment: Environment) : ExecutionCommandFactory {
-    override fun createExecutionCommand(command: Command): ExecutionCommand =
+class DefaultExecutionCommandFactory : ExecutionCommandFactory {
+    override fun createExecutionCommand(environment: Environment, command: Command): ExecutionCommand =
         when (command.name.text) {
             "=" -> {
                 if (command.args.size != 2) {

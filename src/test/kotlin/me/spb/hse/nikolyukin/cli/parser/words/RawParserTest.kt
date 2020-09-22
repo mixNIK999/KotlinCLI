@@ -27,7 +27,8 @@ internal class RawParserTest {
                     listOf("pre", """'first | \'second\' | third'""", "post")
                 ),
                 Arguments.of("\$bc", listOf("bc")),
-                Arguments.of("a\$42\"b\"", listOf("a", "42", "\"b\""))
+                Arguments.of("a\$42\"b\"", listOf("a", "42", "\"b\"")),
+                Arguments.of("a=b", listOf("=", " ", "a", " ", "b"))
             )
     }
 }

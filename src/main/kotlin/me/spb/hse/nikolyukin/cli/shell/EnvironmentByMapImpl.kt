@@ -29,6 +29,8 @@ class EnvironmentByMapImpl(private val map: MutableMap<String, String>) : Enviro
         set(value) {
             map[WORKING_DIR] = value.toAbsolutePath().toString()
         }
+    override val homePath: Path
+        get() = Path.of(System.getProperty("user.home"))
 
     override fun toMap(): Map<String, String> = map
 }

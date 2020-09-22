@@ -39,8 +39,8 @@ class TildaExtension(private val homePath: Path) : Extension {
         }
 }
 
-// converts sequence to format with only JustWord, Pipe and Spaces
-// example: "[JustWord, Spaces, JustWord, Pipe, JustWord]"
+// converts sequence to format with only JustWord, EqualitySign, Pipe and Spaces
+// example: "[JustWord, Spaces, JustWord, Pipe, EqualitySign, JustWord, JustWord]"
 class WordSplittingExtension : Extension {
     override fun extend(words: Sequence<Word>): Sequence<Word> {
         val stringBuilder = StringBuilder()
