@@ -24,6 +24,6 @@ internal class ExecutionWcTest : ExecutionCommandTest() {
         Files.writeString(homePath.resolve(file), text)
         val exe = ExecutionWc(homePath, file)
         val out = exe.execute("".byteInputStream()).stdout.reader().readText()
-        assertEquals("4 6 ${text.length}\n", out)
+        assertEquals("4 6 ${text.toByteArray().size}\n", out)
     }
 }

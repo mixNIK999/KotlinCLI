@@ -23,9 +23,11 @@ class ExecutionWc(private val currentPath: Path, private val file: Path?) : Exec
             lines.forEach { line ->
                 lineNum++
                 wordNum += """[^\s]+""".toRegex().findAll(line).count()
-                byteSize += line.toByteArray().size
+                byteSize += line.toByteArray().size + 1
             }
         }
+        // we counts \n at the end of a file
+        if (byteSize > 0) byteSize--
         val outString = "$lineNum $wordNum $byteSize\n"
         return OutChannels(outString.byteInputStream(), "".byteInputStream())
     }
