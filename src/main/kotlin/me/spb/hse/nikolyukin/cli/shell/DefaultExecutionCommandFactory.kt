@@ -19,10 +19,7 @@ class DefaultExecutionCommandFactory : ExecutionCommandFactory {
             "exit" -> ExecutionExit(environment)
             "pwd" -> ExecutionPwd(environment)
             "wc" -> {
-                if (command.args.isEmpty()) {
-                    throw ShellException("wc takes 1 argument, but was found 0")
-                }
-                ExecutionWc(environment.workingDir, Path.of(command.args[0].value))
+                ExecutionWc(environment.workingDir, command.args.getOrNull(0)?.let { Path.of(it.value) })
             }
             else -> {
                 ExecutionExternalCommand(environment, command.name.text, command.args.map { it.value })

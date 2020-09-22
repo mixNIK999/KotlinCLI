@@ -4,19 +4,26 @@ import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Path
 
-class ExecutionWc(private val currentPath: Path, private val file: Path) : ExecutionCommand {
+class ExecutionWc(private val currentPath: Path, private val file: Path?) : ExecutionCommand {
     override fun execute(stdin: InputStream): OutChannels {
-        val fullPath = currentPath.resolve(file)
-        if (!Files.exists(fullPath)) {
-            return OutChannels("".byteInputStream(), "Error: file $fullPath does not exist".byteInputStream())
+        val inputReader = if (file == null) {
+            stdin.bufferedReader()
+        } else {
+            val fullPath = currentPath.resolve(file)
+            if (!Files.exists(fullPath)) {
+                return OutChannels("".byteInputStream(), "Error: file $fullPath does not exist".byteInputStream())
+            }
+            fullPath.toFile().bufferedReader()
         }
-        val byteSize = Files.size(fullPath)
+        var byteSize = 0
         var lineNum = 0
         var wordNum = 0
-        fullPath.toFile().useLines { lines ->
+
+        inputReader.useLines { lines ->
             lines.forEach { line ->
                 lineNum++
                 wordNum += """[^\s]+""".toRegex().findAll(line).count()
+                byteSize += line.toByteArray().size
             }
         }
         val outString = "$lineNum $wordNum $byteSize\n"
