@@ -11,9 +11,7 @@ import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.homePathRegex
 import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.quoteRegex
 import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.spaceRegex
 import me.spb.hse.nikolyukin.cli.parser.words.CliRegex.wordRegex
-import mu.KotlinLogging
 
-private val logger = KotlinLogging.logger {}
 class RawParser : Grammar<List<Word>>(), WordParser {
     // Tokens
     private val quote by regexToken(quoteRegex)
@@ -62,7 +60,6 @@ class RawParser : Grammar<List<Word>>(), WordParser {
             zeroOrMore(spaces use { Spaces(text) })
 
     override fun parse(rawString: String): Sequence<Word> {
-        logger.info("start parsing string by grammar: $rawString")
         return parseToEnd(rawString).asSequence()
     }
 }
