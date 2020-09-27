@@ -45,6 +45,11 @@ Some example text
 ### Architecture
 Something close to class diagram: <https://drive.google.com/file/d/1Z90_NrCvBziL9iP62ih5rWQS3n3i_l6o/view?usp=sharing>
 
+There is 3 part: WordParser, CommandParser and Shell.
+* Word parser converts String to Words, and has similar to Bash parser architecture. 
+* CommandParser is just comfort interface for working with Pipeline. So there is an adapter for WordParser.
+* Shell executes commands and connects stdin with stdout in pipelines.
+
 ### Style guide
 Using default Kotlin Coding Conventions
 https://kotlinlang.org/docs/reference/coding-conventions.html
