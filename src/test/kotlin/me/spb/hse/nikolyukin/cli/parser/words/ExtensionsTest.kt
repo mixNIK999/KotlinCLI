@@ -24,6 +24,11 @@ internal class ExtensionsTest {
                     listOf("lol", "texttext")
                 ),
                 Arguments.of(
+                    DollarExtension { it.repeat(2) },
+                    listOf(WeakQuotedText("\"a \$b c\"")),
+                    listOf("\"a bb c\"")
+                ),
+                Arguments.of(
                     TildaExtension(Path.of("/my/home")),
                     listOf(JustWord("lol"), HomePath("~/"), JustWord(Path.of("aaa/bbb").toString())),
                     listOf("lol", "/my/home/", "aaa/bbb")

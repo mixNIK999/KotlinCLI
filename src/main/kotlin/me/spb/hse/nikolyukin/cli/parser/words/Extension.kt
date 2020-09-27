@@ -21,7 +21,7 @@ class DollarExtension(private val mapFun: (varName: String) -> String?) : Extens
                 is DollarExpression -> mapFun(word.text)?.let { JustWord(it) }
                 is WeakQuotedText -> WeakQuotedText(
                     word.text.replace(CliRegex.dollarExpressionRegex.toRegex()) {
-                        mapFun(it.value) ?: ""
+                        mapFun(it.value.drop(1)) ?: ""
                     }
                 )
                 else -> word
