@@ -15,7 +15,7 @@ open class ExecutionCommandTest {
     protected lateinit var homePathString: String
 
     @BeforeEach
-    fun init() {
+    private fun init() {
         env = EnvironmentByMapImpl(mutableMapOf())
         env.status = ShellStatus.RUNNING
         env.workingDir = homePath

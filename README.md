@@ -32,6 +32,7 @@ Some example text
 * echo — display arguments
 * wc [FILE] — print number of lines, words and byte
 * pwd — display current working directory
+* grep [-i] [-w] [-A n] PATTERN [FILE] — display current working directory
 * exit — exit cli
 * Note: if unknown command entered then external command will be called through java Process 
 
