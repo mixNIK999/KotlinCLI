@@ -26,11 +26,11 @@ class ExecutionGrep(private val workingDir: Path, args: List<String>) : Executio
     private val opt: Set<RegexOption>
 
     init {
+        CommandLine(this).parseArgs(*args.toTypedArray())
         if (afterContext < 0) {
             throw ShellException("grep: $afterContext: invalid context length argument")
         }
-        CommandLine(this).parseArgs(*args.toTypedArray())
-        opt = sequence<RegexOption> {
+        opt = sequence {
             if (ignoreCase) yield(RegexOption.IGNORE_CASE)
         }.toSet()
 

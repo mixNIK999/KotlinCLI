@@ -18,6 +18,7 @@ class DefaultExecutionCommandFactory : ExecutionCommandFactory {
             "echo" -> ExecutionEcho(command.args.map { it.value })
             "exit" -> ExecutionExit(environment)
             "pwd" -> ExecutionPwd(environment)
+            "grep" -> ExecutionGrep(environment.workingDir, command.args.map { it.value })
             "wc" -> {
                 ExecutionWc(environment.workingDir, command.args.getOrNull(0)?.let { Path.of(it.value) })
             }
